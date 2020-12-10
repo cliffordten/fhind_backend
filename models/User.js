@@ -5,23 +5,55 @@ const jwt = require('jsonwebtoken');
 const randomize = require('randomatic');
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'Please add a name'],
+    required: [true, 'Please add a first name'],
   },
-  email: {
+  lastName: {
     type: String,
-    required: [true, 'Please add an email'],
+    required: [true, 'Please add a last name'],
+  },
+  emailAddress: {
+    type: String,
+    required: [true, 'Please add an email address'],
     unique: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email',
+      'Please add a valid email address',
     ],
   },
-  role: {
+  city: {
     type: String,
-    enum: ['user', 'publisher'],
-    default: 'user',
+    required: [true, 'Please add a city']
+  },
+  region: {
+    type: String,
+    required: [true, 'Please add a region']
+  },
+  country: {
+    type: String,
+    required: [true, 'Please add a country']
+  },
+  phoneNumber: {
+    type: String,
+    required: [true, 'Please add a phone number']
+  },
+  cityToMoveTo: {  //TODO - We need to agree on this too since it has a country by the side
+    type: String,
+    required: [true, 'Please add the city you are moving to']
+  },
+  profession: {
+    type: String,
+    required: [true, 'Please add a profession']
+  },
+  interests: {
+    type: Array,
+    required: [true, 'What interest you?']
+  },
+  sex: {
+    type: String,
+    enum: ['male', 'female'],
+    default: '', //TODO - Agree on a default
   },
   password: {
     type: String,
