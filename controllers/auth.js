@@ -4,13 +4,13 @@ const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 
-// TODO - SHould all of these fields be required inorder to create a account?
+// TODO - Should all of these fields be required inorder to create a account?
 
 // @desc      Register user
 // @route     POST /api/v1/auth/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { firstName, lastName, city, region, country, emailAddress, password, phoneNumber, cityToMoveTo, profession, interests, sex } = req.body;
+  const { firstName, lastName, city, countryYouAreMovingTo, region, country, emailAddress, password, phoneNumber, cityToMoveTo, profession, interests, sex } = req.body;
 
   // Create user
   const user = await User.create({
@@ -18,6 +18,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     lastName, 
     city, 
     region,
+    countryYouAreMovingTo,
     country,
     emailAddress,
     password,

@@ -38,9 +38,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add a phone number']
   },
-  cityToMoveTo: {  //TODO - We need to agree on this too since it has a country by the side
+  cityToMoveTo: { 
     type: String,
     required: [true, 'Please add the city you are moving to']
+  },
+  countryYouAreMovingTo: { 
+    type: String,
+    required: [true, 'Please add the country you are moving to']
   },
   profession: {
     type: String,
