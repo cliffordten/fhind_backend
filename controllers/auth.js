@@ -4,18 +4,29 @@ const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 
+// TODO - Should all of these fields be required inorder to create a account?
+
 // @desc      Register user
 // @route     POST /api/v1/auth/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { firstName, lastName, city, countryYouAreMovingTo, region, country, emailAddress, password, phoneNumber, cityToMoveTo, profession, interests, sex } = req.body;
 
   // Create user
   const user = await User.create({
-    name,
-    email,
+    firstName,
+    lastName, 
+    city, 
+    region,
+    countryYouAreMovingTo,
+    country,
+    emailAddress,
     password,
-    role,
+    phoneNumber,
+    cityToMoveTo,
+    profession,
+    interests,
+    sex
   });
 
   // grab token and send to email
@@ -31,7 +42,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   user.save({ validateBeforeSave: false });
 
   const sendResult = await sendEmail({
-    email: user.email,
+    emailAddress: user.emailAddress,
     subject: 'Email confirmation token',
     message,
   });
@@ -43,15 +54,15 @@ exports.register = asyncHandler(async (req, res, next) => {
 // @route     POST /api/v1/auth/login
 // @access    Public
 exports.login = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { emailAddress, password } = req.body;
 
-  // Validate emil & password
-  if (!email || !password) {
+  // Validate email & password
+  if (!emailAddress || !password) {
     return next(new ErrorResponse('Please provide an email and password', 400));
   }
 
   // Check for user
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ emailAddress }).select('+password');
 
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401));
@@ -100,8 +111,9 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.updateDetails = asyncHandler(async (req, res, next) => {
   const fieldsToUpdate = {
-    name: req.body.name,
-    email: req.body.email,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    emailAddress: req.body.emailAddress,
   };
 
   const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
@@ -136,7 +148,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 // @route     POST /api/v1/auth/forgotpassword
 // @access    Public
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ emailAddress: req.body.emailAddress });
 
   if (!user) {
     return next(new ErrorResponse('There is no user with that email', 404));
@@ -156,7 +168,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   try {
     await sendEmail({
-      email: user.email,
+      emailAddress: user.emailAddress,
       subject: 'Password reset token',
       message,
     });
